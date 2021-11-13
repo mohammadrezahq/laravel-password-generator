@@ -4,20 +4,55 @@ namespace Mor\Passgen;
 
 use Mor\Passgen\Base;
 
-class Handler extends Base {
+class Handler extends Base
+{
 
+    /**
+     * Small charecters
+     */
     protected $smalls;
+
+    /**
+     * Capital charecters
+     */
     protected $capitals;
+
+    /**
+     * Number charecters
+     */
     protected $numbers;
+
+    /**
+     * Special charecters
+     */
     protected $specials;
-    protected $counts;
+
+    /**
+     * Contain charecters
+     */
     protected $contains;
+
+    /**
+     * Not contain charecters
+     */
     protected $notContain;
+    
+    /**
+     * Final resault
+     */
     protected $final = [];
 
-    protected function handleOrder($array, $length) {
+    /**
+     * Handle order of given array.
+     *
+     * @param  array $array : array of characters
+     * @param  int $length : length of password
+     * @return String : generated password
+     */
+    protected function handleOrder(array $array, $length)
+    {
 
-        shuffle( $array );
+        shuffle($array);
 
         $array = array_values($array);
 
@@ -30,8 +65,15 @@ class Handler extends Base {
         return $pass;
     }
 
-
-    protected function containOrder($array, $length) {
+    /**
+     * Handle order of given array with contain method.
+     *
+     * @param  array $array : array of characters
+     * @param  int $length : length of password
+     * @return String : generated password
+     */
+    protected function containOrder($array, $length)
+    {
 
         $charactersWithoutContain = array_diff($array, $this->contains);
 
@@ -66,5 +108,4 @@ class Handler extends Base {
 
         return $pass;
     }
-
 }

@@ -32,7 +32,7 @@ $pass = $pass->make($length); // Return generated password.
 ##### Options
 
 ```
-$pass->capital(); // Use capitall letters
+$pass->capital(); // Use capital letters
 
 $pass->number(); // Use number
 

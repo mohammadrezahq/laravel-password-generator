@@ -7,6 +7,16 @@ use Mor\Passgen\Handler;
 class Passgen extends Handler
 {
 
+    /**
+     * Generate password static method.
+     *
+     * @param  int $length : Length of password
+     * @param  bool $small : Use small letters
+     * @param  bool $capital : Use capital letters
+     * @param  bool $number : Use numbers
+     * @param  bool $special : Use special chars
+     * @return String : generated password
+     */
     public static function Generate(int $length = 8, bool $small = true, bool $capital = false, bool $number = false, bool $special = false) {
 
         $array = [];
@@ -25,6 +35,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Use small letter in password.
+     *
+     * @param  int $count
+     * @return this
+     */
     public function small(Int $count = 0) {
 
         if ($count == 0) {
@@ -37,6 +53,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Use capital letter in password.
+     *
+     * @param  int $count
+     * @return this
+     */
     public function capital(Int $count = 0) {
 
         if ($count == 0) {
@@ -49,6 +71,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Use number in password.
+     *
+     * @param  int $count
+     * @return this
+     */
     public function number(Int $count = 0) {
 
         if ($count == 0) {
@@ -61,6 +89,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Use special chars in password.
+     *
+     * @param  int $count
+     * @return this
+     */
     public function special(Int $count = 0) {
 
         if ($count == 0) {
@@ -73,6 +107,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Chars that should contain in password.
+     *
+     * @param  array|string $value
+     * @return this
+     */
     public function contain($value) {
 
         if (is_array($value)) {
@@ -89,6 +129,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Chars that should not contain in password.
+     *
+     * @param  array|string $value
+     * @return this
+     */
     public function notContain($value) {
 
         if (is_array($value)) {
@@ -105,6 +151,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Generate pass.
+     *
+     * @param  int $length : Password length 
+     * @return string Password
+     */
     public function make(Int $length) {
 
         $this->length = $length;
@@ -125,6 +177,12 @@ class Passgen extends Handler
 
     }
 
+    /**
+     * Re order string static method.
+     *
+     * @param  string $string
+     * @return String : re-ordered string
+     */
     public static function reOrder( string $string ) {
 
         $array = str_split($string);
