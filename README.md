@@ -14,8 +14,8 @@ composer require mor/passgen
 $length = 8 ; // default 8
 $useSmallLetters = true; // default true
 $useCapitalLetters = true; // default false
-$useSmallLetters = true; // default true
-$useSmallLetters = true; // default true
+$useSmallLetters = true; // default false
+$useSmallLetters = true; // default false
 
 $pass = Passgen::Generate($length, $useSmallLetters, $useCapitalLetters, $useNumbers, $useSpecialChars);
 
