@@ -125,10 +125,10 @@ class Passgen extends Handler
 
     }
 
-    public function reOrder( string $string ) {
+    public static function reOrder( string $string ) {
 
         $array = str_split($string);
-        return $this->handleOrder($array, count($array));
+        return (new self)->handleOrder($array, count($array));
 
     }
 }
