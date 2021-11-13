@@ -1,0 +1,18 @@
+{
+    "name": "mor/passgen",
+    "description": "Passwrod generator",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mor\\Passgen\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mohammadreza Haghshenas",
+            "email": "mohammadrezah.official@gmail.com"
+        }
+    ],
+    "require": {}
+}
