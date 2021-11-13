@@ -2,55 +2,127 @@
 
 namespace Mor\Passgen;
 
-class Passgen 
+use Mor\Passgen\Handler;
+
+class Passgen extends Handler
 {
-    protected $smalls = [
-        'a','b','c','d','e','f','g','h','j','k','l','n','m','o','p','q','r','s','t','x','y','z'
-    ];    
-    
-    protected $capitals = [
-        'A','B','C','D','E','F','G','H','J','K','L','N','M','O','P','Q','R','S','T','X','Y','Z'
-    ];    
-    
-    protected $numbers = [
-        '0','1','2','3','4','5','6','7','8','9'
-    ];
 
-    protected $specials = [
-        '~','`','!','@','#','$','^','&','*','(',')','-','_','=','+','/','{','}','|',':',';','"',"'",'<','>',',','.','?'
-    ];
+    public static function Generate(int $length = 8, bool $small = true, bool $capital = false, bool $number = false, bool $special = false) {
 
-
-
-    public function generate(int $length = 8, bool $small = true, bool $capital = false, bool $number = false, bool $special = false) {
-        
         $array = [];
 
-        if ( $small ) $array = array_merge($array, $this->smalls);
+        if ( $small ) $array = array_merge($array, self::SMALL_LETTERS);
 
-        if ( $capital ) $array = array_merge($array, $this->capitals);
+        if ( $capital ) $array = array_merge($array, self::CAPITAL_LETTERS);
 
-        if ( $number ) $array = array_merge($array, $this->numbers);
+        if ( $number ) $array = array_merge($array, self::NUMBERS);
 
-        if ( $special ) $array = array_merge($array, $this->specials);
+        if ( $special ) $array = array_merge($array, self::SPECIALS);
 
-        $pass = $this->handleOrder($array, $length);
+        $pass = (new Self)->handleOrder($array, $length);
 
         return $pass;
 
     }
 
-    protected function handleOrder($array, $length) {
+    public function small(Int $count = 0) {
 
-        shuffle( $array );
+        if ($count == 0) {
 
-        $pass = '';
+            $this->final = array_merge($this->final, self::SMALL_LETTERS);
 
-        for ($i = 0; $i < $length; $i++) {
-            $pass .= $array[rand(0, count($array) - 1)];
+            return $this;
+
         }
 
-        return $pass;
+    }
+
+    public function capital(Int $count = 0) {
+
+        if ($count == 0) {
+
+            $this->final = array_merge($this->final, self::CAPITAL_LETTERS);
+
+            return $this;
+
+        }
+
+    }
+
+    public function number(Int $count = 0) {
+
+        if ($count == 0) {
+
+            $this->final = array_merge($this->final, self::NUMBERS);
+
+            return $this;
+
+        }
+
+    }
+
+    public function special(Int $count = 0) {
+
+        if ($count == 0) {
+
+            $this->final = array_merge($this->final, self::SPECIALS);
+
+            return $this;
+
+        }
+
+    }
+
+    public function contain($value) {
+
+        if (is_array($value)) {
+
+            $this->contains = $value;
+
+        } else {
+
+            $this->contains = str_split($value);
+
+        }
+
+        return $this;
+
+    }
+
+    public function notContain($value) {
+
+        if (is_array($value)) {
+
+            $this->notContain = $value;
+
+        } else {
+
+            $this->notContain = str_split($value);
+
+        }
+
+        return $this;
+
+    }
+
+    public function make(Int $length) {
+
+        $this->length = $length;
+
+        if ($this->notContain) {
+
+            $this->final = array_diff($this->final, $this->notContain);
+
+        }
+
+        if ($this->contains) {
+
+            return $this->containOrder($this->final, $length);
+
+        }
+
+        return $this->handleOrder($this->final, $length);
+
     }
 
     public function reOrder( string $string ) {
