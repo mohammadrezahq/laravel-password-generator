@@ -265,11 +265,11 @@ class Passgen extends Handler
 
         $pass = $this->handleOrder($array, $length);
 
-        if ($type == 'begin') {
+        if ($type == 'before') {
             $this->string = $pass . $this->string;
         }
 
-        if ($type == 'end') {
+        if ($type == 'after') {
             $this->string = $this->string . $pass;
         }
 
