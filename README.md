@@ -32,6 +32,10 @@ $pass = $pass->make($length); // Return generated password.
 ##### Options
 
 ```
+$count = 4; // Minimum count of characters (default = 0 means random)
+$exact = true; // Exact number of count // if count = 4, exactly 4 charcters of this type will be found in password. (default = false)
+$pass->small($count, $exact); 
+
 $pass->capital(); // Use capital letters
 
 $pass->number(); // Use number
@@ -49,6 +53,18 @@ $pass->notContain('sh4'); // Generated password should not have these characters
 ```
 
 ##### extra
+
+###### String to password
+
+```
+$string = 'something';
+
+$type = 'before'; // Type of with: can be 'before' (add generated password before of string) or  'after' or 'both'
+
+$pass->stringToPass($string)->with($length, $type, $useSmallLetters, $useCapitalLetters, $useNumbers, $useSpecialChars)->get();
+```
+
+###### Re order
 
 ```
 $string = 'abcdefg';
