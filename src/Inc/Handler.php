@@ -1,38 +1,11 @@
 <?php
 
-namespace Mor\Passgen;
+namespace Mor\Passgen\Inc;
 
-use Mor\Passgen\Base;
+use Mor\Passgen\Inc\Base;
 
 class Handler extends Base
 {
-
-
-    protected $small_characters = self::SMALL_LETTERS;
-    protected $capital_characters = self::CAPITAL_LETTERS;
-    protected $num_characters = self::NUMBERS;
-    protected $special_characters = self::SPECIALS;
-
-    /**
-     * Small charecters
-     */
-    protected $smalls;
-
-    /**
-     * Capital charecters
-     */
-    protected $capitals;
-
-    /**
-     * Number charecters
-     */
-    protected $numbers;
-
-    /**
-     * Special charecters
-     */
-    protected $specials;
-
     /**
      * Count of characters
      */
@@ -65,26 +38,16 @@ class Handler extends Base
      */
     protected function handleOrder()
     {
+        $this->doNotContain();
 
         $array = $this->final;
+
         $length = $this->length;
-        $newArray = [];
-
-        if ($this->notContain) {
-
-            $this->small_characters = array_diff($this->small_characters, $this->notContain);
-            $this->capital_characters = array_diff($this->capital_characters, $this->notContain);
-            $this->num_characters = array_diff($this->num_characters, $this->notContain);
-            $this->special_characters = array_diff($this->special_characters, $this->notContain);
-
-            $this->small_characters = array_values($this->small_characters);
-            $this->capital_characters = array_values($this->capital_characters);
-            $this->num_characters = array_values($this->num_characters);
-            $this->special_characters = array_values($this->special_characters);
-
-        }
 
         $remain = $length;
+
+        $newArray = [];
+
 
         if ($this->contains) {
 
@@ -131,15 +94,19 @@ class Handler extends Base
 
             foreach($this->count as $key => $value) {
 
+                $characters = (new $key())->characters;
+                $count = $value['count'];
+                $exact = $value['exact'];
+
                 ${$key . 'Characters'} = [];
 
-                for ($i = 0; $i < $value['count']; $i++) {
-                    array_push( ${$key . 'Characters'} , $this->{$key . '_characters'}[rand(0, count($this->{$key . '_characters'}) - 1)]);
+                for ($i = 0; $i < $count; $i++) {
+                    array_push( ${$key . 'Characters'} , $characters[rand(0, count($characters) - 1)]);
                 }
 
-                if ($value['exact']) {
+                if ($exact) {
 
-                    $array = array_diff($array, $this->{$key . '_characters'});
+                    $array = array_diff($array, $characters);
 
                 }
 
@@ -149,9 +116,9 @@ class Handler extends Base
 
 
                 if ($lenthIsZero) {
-                    $length += $value['count'];
+                    $length += $count;
                 } else {
-                    $remain -= $value['count'];
+                    $remain -= $count;
                 }
 
             }
@@ -182,5 +149,16 @@ class Handler extends Base
         }
 
         return $pass;
+    }
+
+    protected function doNotContain() {
+
+        if ($this->notContain) {
+
+            $this->final = array_diff($this->final , $this->notContain);
+            $this->final = array_values($this->final);
+
+        }
+
     }
 }

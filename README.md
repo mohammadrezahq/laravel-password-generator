@@ -8,6 +8,12 @@ Install package with composer:
 composer require mor/passgen
 ```
 
+Use in project with this command:
+
+```
+use Mor\Passgen\Passgen;
+```
+
 #### Generate 
 
 ```
@@ -21,7 +27,7 @@ $pass = Passgen::Generate($length, $useSmallLetters, $useCapitalLetters, $useNum
 
 ```
 
-#### Using orm
+#### Password Generator ORM
 
 ```
 $pass = new Passgen();
@@ -52,9 +58,9 @@ $pass->notContain('sh4'); // Generated password should not have these characters
 
 ```
 
-##### extra
+#### Password Generator ORM
 
-###### String to password
+##### String to password
 
 ```
 $string = 'something';
@@ -63,6 +69,11 @@ $type = 'before'; // Type of with: can be 'before' (add generated password befor
 
 $pass->stringToPass($string)->with($length, $type, $useSmallLetters, $useCapitalLetters, $useNumbers, $useSpecialChars)->get();
 ```
+
+-------------------------------
+
+
+##### Extra
 
 ###### Re order
 
