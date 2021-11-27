@@ -141,9 +141,7 @@ To use custom name for characters add this to your custom character class:
 
 ```
 public $name = 'CustomCharacter';
-``
-
-usage:
+```
 
 ```
 $pass = new Passgen();
