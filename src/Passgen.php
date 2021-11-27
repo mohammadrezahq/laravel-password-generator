@@ -2,19 +2,15 @@
 
 namespace Mor\Passgen;
 
-// Load Handler
-use Mor\Passgen\Inc\Handler;
+use Mor\Passgen\App\App;
 
-// Load App
-use Mor\Passgen\App\PasswordGenerator;
-use Mor\Passgen\App\StringToPass;
-
-// Load Extras 
-use Mor\Passgen\Extras\ReOrder;
-
-final class Passgen extends Handler
+final class Passgen extends App
 {
-
-    use PasswordGenerator, StringToPass, ReOrder;
-
+    /**
+     * Password Generator for Laravel
+     * Author: https://github.com/mohammadrezahq Mohammadreza Haghshenas
+     * Version: 0.9.3
+     * Github: https://github.com/mohammadrezahq/laravel-password-generator
+     * Packagist: https://packagist.org/packages/mor/passgen
+     */
 }

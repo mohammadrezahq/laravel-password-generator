@@ -2,24 +2,33 @@
 
 namespace Mor\Passgen\App;
 
-// Load Characters
-use Mor\Passgen\Chars\Small;
-use Mor\Passgen\Chars\Number;
-use Mor\Passgen\Chars\Capital;
-use Mor\Passgen\Chars\Special;
+// Load Handler 
+use Mor\Passgen\App\PasswordGenerator\Handler;
 
 trait PasswordGenerator {
 
-    public function __construct()
-    {
-        // Register Characters
-        $this->registerChars([
-            Small::class,
-            Number::class,
-            Capital::class,
-            Special::class
-        ]);
-    }
+    use Handler;
+    
+   
+    /**
+     * Count of characters
+     */
+    protected $count;
+
+    /**
+     * Contain charecters
+     */
+    protected $contains;
+
+    /**
+     * Not contain charecters
+     */
+    protected $notContain;
+
+    /**
+     * Final result
+     */
+    protected $final = [];
 
     
     /**
@@ -32,17 +41,17 @@ trait PasswordGenerator {
      * @param  Bool $special : Use special chars
      * @return String : generated password
      */
-    public static function Generate(int $length = 8, bool $small = true, bool $capital = false, bool $number = false, bool $special = false) 
+    public static function Generate(int $length = 8, array $characters) 
     {
         $array = [];
 
-        if ( $small ) $array = array_merge($array, (new Small())->characters);
 
-        if ( $capital ) $array = array_merge($array, (new Capital())->characters);
-
-        if ( $number ) $array = array_merge($array, (new Number())->characters);
-
-        if ( $special ) $array = array_merge($array, (new Special())->characters);
+        foreach ($characters as $char) {
+            $c = (new Self)->isCharRegistered($char);
+            if ( $c ) {
+                $array = array_merge($array, $c);
+            }
+        }
 
         shuffle($array);
 
@@ -54,54 +63,6 @@ trait PasswordGenerator {
         }
 
         return $pass;
-    }
-    
-    /**
-     * Use small letter in password.
-     *
-     * @param  Int $count
-     * @return this
-     */
-    public function small(Int $count = 0, Bool $exact = false) 
-    {
-        $this->setChar(new Small($count, $exact));
-        return $this;
-    }
-
-    /**
-     * Use capital letter in password.
-     *
-     * @param  Int $count
-     * @return this
-     */
-    public function capital(Int $count = 0, Bool $exact = false) 
-    {
-        $this->setChar(new Capital($count, $exact));
-        return $this;
-    }
-
-    /**
-     * Use number in password.
-     *
-     * @param  Int $count
-     * @return this
-     */
-    public function number(Int $count = 0, Bool $exact = false)
-    {
-        $this->setChar(new Number($count, $exact));
-        return $this;
-    }
-
-    /**
-     * Use special chars in password.
-     *
-     * @param  Int $count
-     * @return this
-     */
-    public function special(Int $count = 0, Bool $exact = false) 
-    {
-        $this->setChar(new Special($count, $exact));
-        return $this;
     }
 
     /**
@@ -172,5 +133,146 @@ trait PasswordGenerator {
             $this->count[$object::class]['count'] = $object->count;
             $this->count[$object::class]['exact'] = $object->exact;
         }
+    }
+
+    
+    /**
+     * Handle order of given array.
+     *
+     * @return String : generated password
+     */
+    protected function handleOrder()
+    {
+        $this->doNotContain();
+
+        $array = $this->final;
+
+        $length = $this->length;
+
+        $remain = $length;
+
+        $newArray = [];
+
+
+        if ($this->contains) {
+
+            $array = array_diff($array, $this->contains);
+            $array = array_values($array);
+
+            $contains = $this->contains;
+
+            $containsLength = count($contains);
+
+            $remain = $length - $containsLength;
+
+            $newArray = [];
+
+            $a = 0;
+            while ($a < $containsLength) {
+                $typeOfItem = $this->getType($contains[$a]);
+                if (isset($this->count[$typeOfItem])) {
+                    $this->count[$typeOfItem]['count']--;
+                }
+                array_push($newArray, $contains[$a]);
+                $a++;
+            }
+
+            if ($length == 0) {
+                $length = $containsLength;
+            }
+
+        }
+
+
+        if ($length == 0 ) {
+
+            $lenthIsZero = true;
+
+        } else {
+
+            $lenthIsZero = false;
+
+        }
+
+
+        if ($this->count) {
+
+            foreach($this->count as $key => $value) {
+
+                $characters = (new $key())->characters;
+                $count = $value['count'];
+                $exact = $value['exact'];
+
+                ${$key . 'Characters'} = [];
+
+                for ($i = 0; $i < $count; $i++) {
+                    array_push( ${$key . 'Characters'} , $characters[rand(0, count($characters) - 1)]);
+                }
+
+                if ($exact) {
+
+                    $array = array_diff($array, $characters);
+
+                }
+
+                $array = array_diff($array, ${$key . 'Characters'});
+
+                $newArray = array_merge($newArray, ${$key . 'Characters'});
+
+
+                if ($lenthIsZero) {
+                    $length += $count;
+                } else {
+                    $remain -= $count;
+                }
+
+            }
+
+        }
+
+
+        if ($remain < 0 && $lenthIsZero == false) {
+            return "Increase length or decrease counts.";
+        }
+
+        $array = array_values($array);
+
+        for ($i = 0; $i < $remain; $i++) {
+            array_push( $newArray, $array[rand(0, count($array) - 1)]);
+        }
+
+
+        $newArray = array_values($newArray);
+
+        shuffle($newArray);
+
+        $pass = '';
+
+
+        for ($i = 0; $i < $length; $i++) {
+            $pass .= $newArray[$i];
+        }
+
+        return $pass;
+    }
+
+    protected function doNotContain() {
+
+        if ($this->notContain) {
+
+            $this->final = array_diff($this->final , $this->notContain);
+            $this->final = array_values($this->final);
+
+        }
+
+    }
+
+    protected function getType(String $item) {
+
+        foreach($this->registeredChars as $chars) {
+            if (in_array($item, (new $chars())->characters)) return $chars;
+        }
+
+        return 'unknown';
     }
 }

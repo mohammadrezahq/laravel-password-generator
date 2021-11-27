@@ -2,7 +2,7 @@
 
 namespace Mor\Passgen\Chars;
 
-use Mor\Passgen\Inc\Char;
+use Mor\Passgen\App\PasswordGenerator\Char;
 
 class Small extends Char {
 

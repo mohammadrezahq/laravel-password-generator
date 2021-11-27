@@ -10,6 +10,11 @@ use Mor\Passgen\Chars\Special;
 
 trait StringToPass {
 
+    /**
+     * String to pass variable
+     */
+    protected $string = '';
+
     public function stringToPass(String $string, Bool $shuffle = false)
     {
         if ($shuffle) {
@@ -67,33 +72,4 @@ trait StringToPass {
     {
         return $this->string;
     }
-
-    /*
-    toMagic method:  Is not completed.
-    public function toMagic() {
-
-        $string = $this->string;
-        $array = str_split($string);
-        $newArray = [];
-        foreach($array as $char) {
-            if (isset(self::MAGIC_CHARS[strtolower($char)])) {
-                array_push($newArray, self::MAGIC_CHARS[strtolower($char)]);
-            } else {
-                array_push($newArray, $char);
-            }
-        }
-
-        $string = '';
-
-        for($i = 0; $i < count($newArray); $i++) {
-            $string .= $newArray[$i];
-        }
-
-        $this->string = $string;
-
-        return $this;
-
-    }
-    */
-
 }
